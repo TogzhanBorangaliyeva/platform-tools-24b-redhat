@@ -132,4 +132,5 @@ prometheusRule:
         description: "The Cluster Autoscaler is reporting errors in the last 5 minutes."
 
 deployment:
-  annotations: {}
+  annotations:
+    example-annotation: "value"
