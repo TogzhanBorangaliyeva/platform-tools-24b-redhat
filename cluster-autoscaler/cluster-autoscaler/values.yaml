@@ -133,4 +133,7 @@ prometheusRule:
 
 deployment:
   annotations:
-    example-annotation: "value"
+    key: value
+
+podAnnotations:
+  key: value
