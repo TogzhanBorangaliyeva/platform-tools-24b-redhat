@@ -24,10 +24,10 @@ spec:
 {{- end }}
   template:
     metadata:
-      {{- if .Values.podAnnotations }}
+    {{- if .Values.podAnnotations }}
       annotations:
-{{ toYaml .Values.podAnnotations | indent 8 }}
-    {{- end }}
+        {{ toYaml .Values.podAnnotations | indent 8 }}
+      {{- end }}
       labels:
 {{ include "cluster-autoscaler.instance-name" . | indent 8 }}
       {{- if .Values.additionalLabels }}
