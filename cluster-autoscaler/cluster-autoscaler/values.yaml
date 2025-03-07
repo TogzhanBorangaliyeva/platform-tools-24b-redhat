@@ -90,3 +90,29 @@ vpa:
   enabled: false
   updateMode: "Auto"
   containerPolicy: {}
+
+serviceMonitor:
+  enabled: true  # Enable ServiceMonitor for Prometheus monitoring
+  interval: 10s
+  namespace: monitoring
+  selector:
+    release: prometheus-operator
+  path: /metrics
+  annotations: {}
+  relabelings: {}
+  metricRelabelings: {}
+
+prometheusRule:
+  enabled: true  # Enable Prometheus rules
+  namespace: monitoring  # Namespace where Prometheus is installed
+  additionalLabels: {}
+  rules:
+    - alert: ClusterAutoscalerError
+      expr: |
+        cluster_autoscaler_errors_total > 0
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Cluster Autoscaler is experiencing errors"
+        description: "The Cluster Autoscaler is reporting errors in the last 5 minutes."
