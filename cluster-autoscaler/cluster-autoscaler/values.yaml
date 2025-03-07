@@ -1,115 +1,92 @@
-## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
-# affinity -- Affinity for pod assignment
-affinity: {}
-
-# additionalLabels -- Labels to add to each object of the chart.
-additionalLabels: {}
-
-autoDiscovery:
-  # cloudProviders `aws`, `gce`, `azure`, `magnum`, `clusterapi` and `oci` are supported by auto-discovery at this time
-  # AWS: Set tags as described in https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/cloudprovider/aws/README.md#auto-discovery-setup
-
-  clusterName: redhat-eks-cluster-dev  # Your cluster name
-  namespace: default
-  tags:
-    - k8s.io/cluster-autoscaler/enabled
-    - k8s.io/cluster-autoscaler/redhat-eks-cluster-dev  # Cluster name tag for autoscaler
-
-  roles:
-    - worker
-
-  labels: []
-
-autoscalingGroups: 
-  - name: redhat-eks-cluster-dev-nodes  # Replace with the actual name of your AWS ASG
-    maxSize: 4
-    minSize: 1
-    instanceType: t3.small # Change instance type if needed
-    region: us-east-1  # Region your ASG is in
-
-# awsRegion -- AWS region
+# Set your AWS region
 awsRegion: us-east-1
 
-cloudProvider: aws  # Set to AWS since that's your cloud provider
-
-# For RBAC, I'll leave it as true for a typical Cluster Autoscaler setup
-rbac:
-  create: true
-  pspEnabled: false  # Pod Security Policies can be enabled if needed
-  clusterScoped: true
-  serviceAccount:
-    create: true
-    name: ""
-    automountServiceAccountToken: true
-
-# replicaCount -- Desired number of pods
-replicaCount: 1
-
-# resources -- Pod resource requests and limits.
-resources: {}
-
-# securityContext -- Security context for pod
-securityContext: {}
-
-# service configuration for exposing the cluster autoscaler
-service:
-  create: true
-  annotations: {}
-  labels: {}
-  externalIPs: []
-  clusterIP: ""
-  loadBalancerIP: ""
-  loadBalancerSourceRanges: []
-  servicePort: 8085
-  portName: http
-  type: ClusterIP
-
-# Optional: Prometheus monitoring integration (leave as false if not needed)
-serviceMonitor:
-  enabled: false
-  interval: 10s
-  namespace: monitoring
-  selector:
-    release: prometheus-operator
-  path: /metrics
-  annotations: {}
-  relabelings: {}
-  metricRelabelings: {}
-
-# Optional: Topology Spread Constraints for node distribution
-topologySpreadConstraints: []
-
-# Update strategy for deployment
-updateStrategy: {}
-
-# vpa -- Vertical Pod Autoscaler configuration (optional, disable by default)
-vpa:
-  enabled: false
-  updateMode: "Auto"
-  containerPolicy: {}
-
-# extraArgs -- Additional arguments for the cluster autoscaler
-extraArgs:
-  logtostderr: true
-  stderrthreshold: info
-  v: 4
-
-# nodeSelector, podAnnotations, podLabels, etc. (modify if needed for your environment)
-nodeSelector: {}
-podAnnotations: {}
-podLabels: {}
-
-# tolerations for node taints (modify if needed)
-tolerations: []
-
-# Full override name or service name (optional)
-fullnameOverride: ""
-nameOverride: ""
-
-# Cluster autoscaler image configuration
+# Cluster autoscaler image 
 image:
   repository: registry.k8s.io/autoscaling/cluster-autoscaler
   tag: v1.32.0
   pullPolicy: IfNotPresent
   pullSecrets: []
 
+rbac:
+  create: true
+  serviceAccount:
+    create: true
+    name: ""
+    automountServiceAccountToken: true
+
+# Auto-discovery mode for node groups
+autoDiscovery:
+  clusterName: redhat-eks-cluster-dev  # Your cluster name
+  namespace: default
+  tags:
+    - k8s.io/cluster-autoscaler/enabled
+    - k8s.io/cluster-autoscaler/redhat-eks-cluster-dev  # Cluster name tag for autoscaler
+
+# extraArgs -- Additional arguments for the cluster autoscaler
+extraArgs:
+  balance-similar-node-groups: true
+  skip-nodes-with-system-pods: false
+  logtostderr: true
+  stderrthreshold: info
+  v: 4 # Verbosity level fo debugging
+  scale-down-unneeded-time: 2m
+  scale-down-delay-after-add: 1m
+  scale-down-delay-after-delete: 30s
+  scale-down-utiliziation-threshold: 2m
+
+# resources -- Pod resource requests and limits.
+resources: 
+  requests:
+    cpu: 100m
+    memory: 300Mi
+  limits:
+    cpu: 500m
+    memory: 500Mi
+
+# tolerations for node taints (modify if needed)
+tolerations: 
+  - key: "node.kubernetes.io/not-ready"
+    operator: "Exists"
+    effect: "NoSchedule"
+  - key: "node.kubernetes.io/unreachable"
+    operator: "Exists"
+    effect: "NoScedule"
+
+# Node selector (optional, if you want to schedule on specific nodes)
+nodeSelector: {}
+
+# Affinity rules (optional)
+affinity: {}
+
+# Priority Class (ensures Cluster Autoscaler runs with high priority)
+priorityClassName: system-cluster-critical
+
+# Pod disruption budget (ensures availibility during updates)
+podDisruptionBudget: {}
+
+# securityContext -- Security context for pod
+securityContext: 
+  runAsUser: 65534
+  runAsGroup: 65534
+  fsGroup: 65534
+
+livenessProbe: 
+  httpGet:
+    path: /health-check
+    port: 8085
+  initialDelaySeconds: 10
+  periodSeconds: 10
+
+readinessProbe: 
+  httpGet:
+    path: /health-check
+    port: 8085
+  initialDelaySeconds: 5
+  periodSeconds: 5
+
+# vpa -- Vertical Pod Autoscaler configuration (optional, disable by default)
+vpa:
+  enabled: false
+  updateMode: "Auto"
+  containerPolicy: {}
