@@ -10,10 +10,24 @@ image:
 
 rbac:
   create: true
+  clusterScoped: true
   serviceAccount:
     create: true
     name: ""
     automountServiceAccountToken: true
+
+# service configuration for exposing the cluster autoscaler
+service:
+  create: true
+  annotations: {}
+  labels: {}
+  externalIPs: []
+  clusterIP: ""
+  loadBalancerIP: ""
+  loadBalancerSourceRanges: []
+  servicePort: 8085
+  portName: http
+  type: ClusterIP
 
 # Auto-discovery mode for node groups
 autoDiscovery:
