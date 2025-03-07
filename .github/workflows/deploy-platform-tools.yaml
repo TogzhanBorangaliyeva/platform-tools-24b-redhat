@@ -78,8 +78,6 @@ jobs:
       # Optional: Verify that Cluster Autoscaler is deployed successfully
       - name: Verify Cluster Autoscaler Deployment
         run: kubectl -n kube-system get deployments cluster-autoscaler
-        working-directory: ./cluster-autoscaler  # Optionally, set this if needed
-
 
       - name: Finalize Deployment
         run: |
