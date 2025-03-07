@@ -16,7 +16,6 @@ env:
   AWS_REGION: "us-east-1"
   ENVIRONMENT_STAGE: "dev"
   ROLE_TO_ASSUME : "arn:aws:iam::539247466139:role/platform-tools-24b-redhat-GHA-role"
-  CLUSTER_NAME : "redhat-eks-cluster-${{ env.ENVIRONMENT_STAGE }}"
 
 jobs:
   deploy-platform-tools:
@@ -38,7 +37,7 @@ jobs:
 
       # Login to EKS, make sure to switch to the permanent cluster created with terraform once it's up
       - name: Login to EKS - update kubeconfig
-        run: aws eks update-kubeconfig --name ${{ env.CLUSTER_NAME }} --region $AWS_REGION
+        run: aws eks update-kubeconfig --name redhat-eks-cluster-${{ env.ENVIRONMENT_STAGE }} --region $AWS_REGION
 
       # Install Helm
       - name: Install Helm
@@ -70,7 +69,7 @@ jobs:
       #   run: |
       #     helm upgrade --install cluster-autoscaler autoscaler/cluster-autoscaler \
       #       --namespace kube-system \
-      #       --set autoDiscovery.clusterName=${{ env.CLUSTER_NAME }} \
+      #       --set autoDiscovery.clusterName=redhat-eks-cluster-${{ env.ENVIRONMENT_STAGE }} \
       #       --set awsRegion=${{ env.AWS_REGION }} \
       #       --set rbac.create=true \
       #       --set securityGroupID=sg-028f2afe831712a0e # Optionally, replace with actual security group ID
