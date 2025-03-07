@@ -1,12 +1,10 @@
-{{- if or (or .Values.autoDiscovery.clusterName .Values.autoDiscovery.namespace .Values.autoDiscovery.labels) .Values.autoscalingGroups }}
+{{- if or ( or .Values.autoDiscovery.clusterName .Values.autoDiscovery.namespace .Values.autoDiscovery.labels ) .Values.autoscalingGroups }}
 {{/* one of the above is required */}}
 apiVersion: {{ template "deployment.apiVersion" . }}
 kind: Deployment
 metadata:
   annotations:
-    {{- if .Values.deployment.annotations }}
     {{ toYaml .Values.deployment.annotations | indent 4 }}
-    {{- end }}
   labels:
     {{ include "cluster-autoscaler.labels" . | indent 4 }}
   name: {{ template "cluster-autoscaler.fullname" . }}
@@ -34,6 +32,9 @@ spec:
         {{ include "cluster-autoscaler.instance-name" . | indent 8 }}
         {{- if .Values.additionalLabels }}
         {{ toYaml .Values.additionalLabels | indent 8 }}
+        {{- end }}
+        {{- if .Values.podLabels }}
+        {{ toYaml .Values.podLabels | indent 8 }}
         {{- end }}
     spec:
       {{- if .Values.priorityClassName }}
