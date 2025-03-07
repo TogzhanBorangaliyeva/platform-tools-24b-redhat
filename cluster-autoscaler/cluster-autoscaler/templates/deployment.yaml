@@ -4,7 +4,9 @@ apiVersion: {{ template "deployment.apiVersion" . }}
 kind: Deployment
 metadata:
   annotations:
+    {{- if .Values.deployment.annotations }}
     {{ toYaml .Values.deployment.annotations | indent 4 }}
+    {{- end }}
   labels:
     {{ include "cluster-autoscaler.labels" . | indent 4 }}
   name: {{ template "cluster-autoscaler.fullname" . }}
