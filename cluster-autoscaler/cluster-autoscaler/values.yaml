@@ -221,11 +221,12 @@ rbac:
   clusterScoped: true
   serviceAccount:
     # rbac.serviceAccount.annotations -- Additional Service Account annotations.
-    annotations: {}
+    annotations: 
+      eks.amazonaws.com/role-arn: "arn:aws:iam::539247466139:role/cluster_autoscaler"
     # rbac.serviceAccount.create -- If `true` and `rbac.create` is also true, a Service Account will be created.
     create: true
     # rbac.serviceAccount.name -- The name of the ServiceAccount to use. If not set and create is `true`, a name is generated using the fullname template.
-    name: ""
+    name: "cluster-autoscaler"
     # rbac.serviceAccount.automountServiceAccountToken -- Automount API credentials for a Service Account.
     automountServiceAccountToken: true
 
