@@ -81,32 +81,31 @@ serviceAccountName: "cluster-autoscaler-sa"
 vpa:
   enabled: false  # Set to true if you want to enable Vertical Pod Autoscaler
 
-# Enable ServiceMonitor
+# values.yaml
+
 serviceMonitor:
-  enabled: true  # Enable ServiceMonitor
-  additionalLabels:  # Optional - Add labels to the ServiceMonitor
+  enabled: true
+  additionalLabels:
     release: "cluster-autoscaler"
-  # Optional: Define monitoring rules for Prometheus
 
-  # Define the portName for the service
+  # Define the service section with portName
   service:
-    portName: "http"  # Replace "http" with the actual port name for the service
+    portName: "http"  # This should be the name of the port exposed by your cluster-autoscaler service
 
-  servicemonitor:
-    rules:
-      - alert: "HighPodCPUUsage"
-        expr: sum(rate(container_cpu_usage_seconds_total{job="cluster-autoscaler", cluster="", namespace="kube-system", container!="", pod=~"cluster-autoscaler.*"}[5m])) by (pod)
-        for: 5m
-        labels:
-          severity: "critical"
-        annotations:
-          description: "CPU usage is above 80% for 5 minutes."
-      - alert: "HighPodMemoryUsage"
-        expr: sum(container_memory_usage_bytes{job="cluster-autoscaler", cluster="", namespace="kube-system", container!="", pod=~"cluster-autoscaler.*"}) by (pod) > 80e6  # 80MiB
-        for: 5m
-        labels:
-          severity: "critical"
-        annotations:
-          description: "Memory usage is above 80MiB for 5 minutes."
-
-# Add other configurations below as necessary
+# Optional: Add custom monitoring rules if required
+servicemonitor:
+  rules:
+    - alert: "HighPodCPUUsage"
+      expr: sum(rate(container_cpu_usage_seconds_total{job="cluster-autoscaler", cluster="", namespace="kube-system", container!="", pod=~"cluster-autoscaler.*"}[5m])) by (pod)
+      for: 5m
+      labels:
+        severity: "critical"
+      annotations:
+        description: "CPU usage is above 80% for 5 minutes."
+    - alert: "HighPodMemoryUsage"
+      expr: sum(container_memory_usage_bytes{job="cluster-autoscaler", cluster="", namespace="kube-system", container!="", pod=~"cluster-autoscaler.*"}) by (pod) > 80e6  # 80MiB
+      for: 5m
+      labels:
+        severity: "critical"
+      annotations:
+        description: "Memory usage is above 80MiB for 5 minutes."
