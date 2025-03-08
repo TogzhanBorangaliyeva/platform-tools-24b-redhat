@@ -137,5 +137,6 @@ deployment:
     prometheus.io/port: "8080"
 
 additionalLabels:
+  cluster-autoscaler-instance: my-cluster-autoscaler
   environment: "dev"
   team: "devops"
