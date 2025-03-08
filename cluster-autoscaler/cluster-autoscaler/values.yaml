@@ -145,3 +145,5 @@ podLabels:
   app.kubernetes.io/name: "cluster-autoscaler"
   app.kubernetes.io/component: "autoscaler"
   monitoring: "enabled"
+
+dnsPolicy: "ClusterFirst"
