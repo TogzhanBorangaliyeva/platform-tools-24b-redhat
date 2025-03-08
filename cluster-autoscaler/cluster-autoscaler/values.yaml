@@ -76,3 +76,7 @@ extraVolumeMounts: []
 cloudConfigPath: "/etc/cloudconfig"
 
 serviceAccountName: "cluster-autoscaler-sa"
+
+# Add this to your values.yaml file
+vpa:
+  enabled: false  # Set to true if you want to enable Vertical Pod Autoscaler
