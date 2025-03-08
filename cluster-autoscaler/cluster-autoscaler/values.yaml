@@ -109,3 +109,6 @@ servicemonitor:
         severity: "critical"
       annotations:
         description: "Memory usage is above 80MiB for 5 minutes."
+
+service:
+  portName: "http"  # This should be the name of the port
