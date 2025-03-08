@@ -75,8 +75,6 @@ extraVolumeMounts: []
 
 cloudConfigPath: "/etc/cloudconfig"
 
-serviceAccountName: "cluster-autoscaler-sa"
-
 # Add this to your values.yaml file
 vpa:
   enabled: false  # Set to true if you want to enable Vertical Pod Autoscaler
@@ -112,3 +110,8 @@ servicemonitor:
 
 service:
   portName: "http"  # This should be the name of the port
+
+rbac:
+  serviceAccount:
+    create: true  # Set to true if you want to create a ServiceAccount
+    name: ""  # You can leave this blank if you want Helm to generate a name
