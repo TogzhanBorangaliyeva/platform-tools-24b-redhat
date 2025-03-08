@@ -1,151 +1,78 @@
-# Set your AWS region
-awsRegion: us-east-1
-
-# Cluster autoscaler image 
-image:
-  repository: registry.k8s.io/autoscaling/cluster-autoscaler
-  tag: v1.32.0
-  pullPolicy: IfNotPresent
-  pullSecrets: []
-
-rbac:
-  create: true
-  clusterScoped: true
-  serviceAccount:
-    create: true
-    name: ""
-    automountServiceAccountToken: true
-
-# service configuration for exposing the cluster autoscaler
-service:
-  create: true
-  annotations: {}
-  labels: {}
-  externalIPs: []
-  clusterIP: ""
-  loadBalancerIP: ""
-  loadBalancerSourceRanges: []
-  servicePort: 8085
-  portName: http
-  type: ClusterIP
-
-# Auto-discovery mode for node groups
-autoDiscovery:
-  clusterName: redhat-eks-cluster-dev  # Your cluster name
-  namespace: default
-  tags:
-    - k8s.io/cluster-autoscaler/enabled
-    - k8s.io/cluster-autoscaler/redhat-eks-cluster-dev  # Cluster name tag for autoscaler
-
-# extraArgs -- Additional arguments for the cluster autoscaler
-extraArgs:
-  balance-similar-node-groups: true
-  skip-nodes-with-system-pods: false
-  logtostderr: true
-  stderrthreshold: info
-  v: 4 # Verbosity level fo debugging
-  scale-down-unneeded-time: 2m
-  scale-down-delay-after-add: 1m
-  scale-down-delay-after-delete: 30s
-  scale-down-utiliziation-threshold: 2m
-
-# resources -- Pod resource requests and limits.
-resources: 
-  requests:
-    cpu: 100m
-    memory: 300Mi
-  limits:
-    cpu: 500m
-    memory: 500Mi
-
-# tolerations for node taints (modify if needed)
-tolerations: 
-  - key: "node.kubernetes.io/not-ready"
-    operator: "Exists"
-    effect: "NoSchedule"
-  - key: "node.kubernetes.io/unreachable"
-    operator: "Exists"
-    effect: "NoScedule"
-
-# Node selector (optional, if you want to schedule on specific nodes)
-nodeSelector: {}
-
-# Affinity rules (optional)
-affinity: {}
-
-# Priority Class (ensures Cluster Autoscaler runs with high priority)
-priorityClassName: system-cluster-critical
-
-# Pod disruption budget (ensures availibility during updates)
-podDisruptionBudget: {}
-
-# securityContext -- Security context for pod
-securityContext: 
-  runAsUser: 65534
-  runAsGroup: 65534
-  fsGroup: 65534
-
-livenessProbe: 
-  httpGet:
-    path: /health-check
-    port: 8085
-  initialDelaySeconds: 10
-  periodSeconds: 10
-
-readinessProbe: 
-  httpGet:
-    path: /health-check
-    port: 8085
-  initialDelaySeconds: 5
-  periodSeconds: 5
-
-# vpa -- Vertical Pod Autoscaler configuration (optional, disable by default)
-vpa:
-  enabled: false
-  updateMode: "Auto"
-  containerPolicy: {}
-
-serviceMonitor:
-  enabled: true  # Enable ServiceMonitor for Prometheus monitoring
-  interval: 10s
-  namespace: monitoring
-  selector:
-    release: prometheus-operator
-  path: /metrics
-  annotations: {}
-  relabelings: {}
-  metricRelabelings: {}
-
-prometheusRule:
-  enabled: true  # Enable Prometheus rules
-  namespace: monitoring  # Namespace where Prometheus is installed
-  additionalLabels: {}
-  rules:
-    - alert: ClusterAutoscalerError
-      expr: |
-        cluster_autoscaler_errors_total > 0
-      for: 5m
-      labels:
-        severity: warning
-      annotations:
-        summary: "Cluster Autoscaler is experiencing errors"
-        description: "The Cluster Autoscaler is reporting errors in the last 5 minutes."
+replicaCount: 1
+revisionHistoryLimit: 10
 
 deployment:
-  annotations:
-    prometheus.io/scrape: "true"
-    prometheus.io/port: "8080"
+  annotations: {}
+  labels: {}
 
-additionalLabels:
-  cluster-autoscaler-instance: my-cluster-autoscaler
-  environment: "dev"
-  team: "devops"
+image:
+  repository: "k8s.gcr.io/cluster-autoscaler"
+  tag: "v1.21.0"
+  pullPolicy: "IfNotPresent"
 
-podLabels:
-  app.kubernetes.io/name: "cluster-autoscaler"
-  app.kubernetes.io/component: "autoscaler"
-  monitoring: "enabled"
+cloudProvider: "aws"
+awsRegion: "us-east-1"
+autoDiscovery:
+  clusterName: "redhat-eks-cluster-dev"
+  namespace: "kube-system"
+  tags:
+    - "tag1=value1"
+    - "tag2=value2"
+  labels: []
+  roles: []
+autoscalingGroups:
+  - name: "my-auto-scaling-group"
+    minSize: 1
+    maxSize: 5
+    instanceType: "t2.micro"
+    region: "us-east-1"
 
+priorityClassName: "high-priority"
 dnsPolicy: "ClusterFirst"
+hostNetwork: false
 
-hostNetwork: true
+initContainers: []
+
+podAnnotations: {}
+
+podLabels: {}
+
+updateStrategy:
+  type: "RollingUpdate"
+  rollingUpdate:
+    maxSurge: 1
+    maxUnavailable: 0
+
+extraArgs: 
+  - "v"
+  - "4"
+
+extraEnv: 
+  CUSTOM_ENV: "value"
+
+envFromSecret: ""
+envFromConfigMap: ""
+
+resources:
+  limits:
+    cpu: "100m"
+    memory: "128Mi"
+  requests:
+    cpu: "50m"
+    memory: "64Mi"
+
+containerSecurityContext: {}
+
+affinity: {}
+nodeSelector: {}
+tolerations: []
+topologySpreadConstraints: []
+
+securityContext: {}
+
+extraVolumeSecrets: {}
+extraVolumeMounts: []
+
+cloudConfigPath: "/etc/cloudconfig"
+
+serviceAccountName: "cluster-autoscaler-sa"
