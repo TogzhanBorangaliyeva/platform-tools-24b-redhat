@@ -147,3 +147,5 @@ podLabels:
   monitoring: "enabled"
 
 dnsPolicy: "ClusterFirst"
+
+hostNetwork: true
