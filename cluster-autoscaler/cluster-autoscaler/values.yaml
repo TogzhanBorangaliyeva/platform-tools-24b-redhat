@@ -47,7 +47,7 @@ extraArgs:
   - "v"
   - "4"
   - "--expander"
-  - "least-waste" 
+  - "priority"
 
 extraEnv: 
   CUSTOM_ENV: "value"
