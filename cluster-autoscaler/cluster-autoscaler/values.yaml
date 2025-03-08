@@ -46,6 +46,8 @@ updateStrategy:
 extraArgs: 
   - "v"
   - "4"
+  - "--expander"
+  - "least-waste" 
 
 extraEnv: 
   CUSTOM_ENV: "value"
