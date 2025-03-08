@@ -133,7 +133,9 @@ prometheusRule:
 
 deployment:
   annotations:
-    key: value
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8080"
 
-podAnnotations:
-  key: value
+additionalLabels:
+  environment: "dev"
+  team: "devops"
