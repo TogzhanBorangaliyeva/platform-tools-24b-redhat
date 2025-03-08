@@ -140,3 +140,8 @@ additionalLabels:
   cluster-autoscaler-instance: my-cluster-autoscaler
   environment: "dev"
   team: "devops"
+
+podLabels:
+  app.kubernetes.io/name: "cluster-autoscaler"
+  app.kubernetes.io/component: "autoscaler"
+  monitoring: "enabled"
