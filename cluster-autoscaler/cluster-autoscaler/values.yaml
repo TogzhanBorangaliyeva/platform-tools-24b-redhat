@@ -79,14 +79,14 @@ extraArgs:
   # scale-down-enabled: true
   # balance-similar-node-groups: true
   # min-replica-count: 0
-  # scale-down-utilization-threshold: 0.5
+  scale-down-utilization-threshold: 0.5
   # scale-down-non-empty-candidates-count: 30
   # max-node-provision-time: 15m0s
   # scan-interval: 10s
-  # scale-down-delay-after-add: 10m
-  # scale-down-delay-after-delete: 0s
+  scale-down-delay-after-add: 1m
+  scale-down-delay-after-delete: 30s
   # scale-down-delay-after-failure: 3m
-  # scale-down-unneeded-time: 10m
+  scale-down-unneeded-time: 2m
   # node-deletion-delay-timeout: 2m
   # node-deletion-batcher-interval: 0s
   # skip-nodes-with-system-pods: true
