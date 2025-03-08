@@ -87,6 +87,11 @@ serviceMonitor:
   additionalLabels:  # Optional - Add labels to the ServiceMonitor
     release: "cluster-autoscaler"
   # Optional: Define monitoring rules for Prometheus
+
+  # Define the portName for the service
+  service:
+    portName: "http"  # Replace "http" with the actual port name for the service
+
   servicemonitor:
     rules:
       - alert: "HighPodCPUUsage"
