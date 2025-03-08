@@ -233,7 +233,7 @@ rbac:
 replicaCount: 1
 
 # resources -- Pod resource requests and limits.
-resources: {}
+resources: 
   limits:
     cpu: 100m
     memory: 300Mi
@@ -245,7 +245,7 @@ resources: {}
 revisionHistoryLimit: 10
 
 # securityContext -- [Security context for pod](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
-securityContext: {}
+securityContext: 
   runAsNonRoot: true
   runAsUser: 65534
   runAsGroup: 65534
@@ -313,11 +313,11 @@ topologySpreadConstraints: []
   #       app.kubernetes.io/instance: cluster-autoscaler
 
 # updateStrategy -- [Deployment update strategy](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy)
-updateStrategy: {}
-  # rollingUpdate:
-  #   maxSurge: 1
-  #   maxUnavailable: 0
-  # type: RollingUpdate
+updateStrategy: 
+  rollingUpdate:
+    maxSurge: 1
+    maxUnavailable: 0
+  type: RollingUpdate
 
 # vpa -- Configure a VerticalPodAutoscaler for the cluster-autoscaler Deployment.
 vpa:
