@@ -14,18 +14,18 @@ cloudProvider: "aws"
 awsRegion: "us-east-1"
 autoDiscovery:
   clusterName: "redhat-eks-cluster-dev"
-  namespace: "kube-system"
+  namespace: default
   tags:
-    - "tag1=value1"
-    - "tag2=value2"
+    - k8s.io/cluster-autoscaler/enabled
+    - k8s.io/cluster-autoscaler/redhat-eks-cluster-dev # Cluster name tag for autoscaler
   labels: []
   roles: []
 autoscalingGroups:
-  - name: "my-auto-scaling-group"
+  - name: redhat-eks-cluster-dev-nodes  # Replace with the actual name of your AWS ASG
     minSize: 1
-    maxSize: 5
-    instanceType: "t2.micro"
-    region: "us-east-1"
+    maxSize: 3
+    instanceType: "t2.micro" # Change instance type if needed
+    region: "us-east-1" # Region your ASG is in
 
 priorityClassName: "high-priority"
 dnsPolicy: "ClusterFirst"
@@ -109,9 +109,22 @@ servicemonitor:
         description: "Memory usage is above 80MiB for 5 minutes."
 
 service:
-  portName: "http"  # This should be the name of the port
+  create: true
+  annotations: {}
+  labels: {}
+  externalIPs: []
+  clusterIP: ""
+  loadBalancerIP: ""
+  loadBalancerSourceRanges: []
+  servicePort: 8085
+  portName: http
+  type: ClusterIP
 
 rbac:
+  create: true
+  pspEnabled: false  # Pod Security Policies can be enabled if needed
+  clusterScoped: true
   serviceAccount:
-    create: true  # Set to true if you want to create a ServiceAccount
-    name: ""  # You can leave this blank if you want Helm to generate a name
+    create: true
+    name: ""
+    automountServiceAccountToken: true
