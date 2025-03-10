@@ -1,0 +1,6 @@
+apiVersion: v2
+name: eks-logging
+description: A Helm chart for bundled EFK Deployment
+type: application
+version: 0.1.3 # This is chart version
+appVersion: "8.17.2"

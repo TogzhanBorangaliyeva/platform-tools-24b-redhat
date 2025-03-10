@@ -1,0 +1,32 @@
+global:
+  namespace: logging
+
+elasticsearch: 
+  name: elasticsearch-cluster
+  replicas: 1
+  image:
+    repository: docker.elastic.co/elasticsearch/elasticsearch
+    tag: 7.5.0
+  limits:
+    cpu: "1000m"
+    memory: "2Gi"
+  requests: 
+    cpu: "500m"
+    memory: "1Gi"
+  ports:
+    http: 9200
+    transport: 9300
+  volumeMounts:
+    name: data
+    mountPath: /usr/share/elasticsearch/data
+  clusterName: "k8s-logs"
+  discoverySeedHosts: "elasticsearch-0.elasticsearch-svc.logging.svc.cluster.local"
+  initialMasterNodes: "elasticsearch-0"
+  javaOpts:  "-Xms512m -Xmx512m"
+  securityEnabled: "false"
+  appConfig:
+    initContainers:
+      image: busybox
+  storage: 5Gi
+  storageClassName: gp2
+  # serviceAccountRole: arn:aws:iam::340924313311:role/EFKSecretsRole
