@@ -25,8 +25,8 @@ autoDiscovery:
 
 autoscalingGroups:
 - name: redhat-eks-cluster-dev-nodes
-  maxSize: 3
-  minSize: 0
+  maxSize: 4
+  minSize: 1
 
 # awsRegion -- AWS region (required if `cloudProvider=aws`)
 awsRegion: us-east-1
@@ -76,7 +76,7 @@ extraArgs:
   # leader-elect-resource-lock: endpoints
   # skip-nodes-with-local-storage: true
   # expander: random
-  # scale-down-enabled: true
+  scale-down-enabled: true
   # balance-similar-node-groups: true
   # min-replica-count: 0
   scale-down-utilization-threshold: 0.5
