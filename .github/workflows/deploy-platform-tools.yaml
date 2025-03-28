@@ -47,22 +47,26 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      # Installing prometheus
+      - name: Add Prometheus Helm Repo
+        run: helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 
-      # Install Cluster Autoscaler using Helm
-      - name: Install Cluster Autoscaler using Helm
-        run: |
-          helm upgrade --install cluster-autoscaler ./cluster-autoscaler/cluster-autoscaler \
-            --namespace kube-system \
-            --set autoDiscovery.clusterName=redhat-eks-cluster-${{ env.ENVIRONMENT_STAGE }} \
-            --set awsRegion=${{ env.AWS_REGION }} \
-            --set rbac.create=true \
-            --set securityGroupID=sg-028f2afe831712a0e # Optionally, replace with actual security group ID
+      - name: Update Helm Repo
+        run: helm repo update
 
-      - name: Deploy EKS Logging
+      - name: Deploy Prometheus using Helm
         run: |
-            helm upgrade --install efk-helm-chart ./eks-logging/efk-helm-chart \
-            --values ./eks-logging/efk-helm-chart/values.yaml \
-            --namespace logging
+          helm upgrade --install prometheus prometheus-community/kube-prometheus-stack \
+            --namespace monitoring \
+            --create-namespace \
+            -f ./eks-monitoring/prometheus/values-dev.yaml
+ 
+
+      # - name: Deploy EKS Logging
+      #   run: |
+      #       helm upgrade --install efk-helm-chart ./eks-logging/efk-helm-chart \
+      #       --values ./eks-logging/efk-helm-chart/values.yaml \
+      #       --namespace logging
 
       # - name: Finalize Deployment
       #   run: |

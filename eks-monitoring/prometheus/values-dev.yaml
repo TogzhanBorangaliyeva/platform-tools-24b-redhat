@@ -1,0 +1,22 @@
+---
+### Since EKS manages control plana, we want to disable monitoring for etcd, scheduler and contrtoller.
+defaultRules:
+  rules:
+    etcd: false
+    kubeScheduler: false
+kubeControllerManager:
+  enabled: false
+kubeEtcd:
+  enabled: false
+kubeScheduler:
+  enabled: false
+### Also add custom labels. This label will be used by prometheus operator to select service monitor objects e.g. postgres
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelector:
+      matchLabels:
+        prometheus: devops
+### Common labels. Add the same lables that you used periously. 
+### If you will not add it prometheus operator will ignore default service monitors created by this helm chart. And prometheus target options would be empty.
+commonLabels:
+  prometheus: devops
