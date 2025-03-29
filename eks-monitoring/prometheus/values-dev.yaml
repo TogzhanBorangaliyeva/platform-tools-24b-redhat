@@ -20,3 +20,40 @@ prometheus:
 ### If you will not add it prometheus operator will ignore default service monitors created by this helm chart. And prometheus target options would be empty.
 commonLabels:
   prometheus: devops
+
+grafana:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+      - grafana.togzhanborangali.click
+    # tls:
+    #   - secretName: grafana-tls-secret
+    #     hosts:
+    #       - grafana.togzhanborangali.click
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"  # Enable TLS if you're using ACM certificates.
+  serviceAccount:
+    create: false  # Set this to false because you already created it manually
+    name: grafana-sa  # The service account you created
+    
+  # SecretProviderClass Configuration (Used to integrate Secrets Manager secrets)
+  secretProviderClass:
+    enabled: true
+    name: grafana-secrets-provider  # Name of the SecretProviderClass you created
+    secretMountPath: /mnt/secrets-store  # Mount point inside the container for the secrets
+
+  # Volumes and volume mounts for secrets from the CSI driver
+  volumes:
+    - name: secrets-store
+      csi:
+        driver: secrets-store.csi.k8s.io
+        readOnly: true
+        volumeAttributes:
+          secretProviderClass: grafana-secrets-provider
+
+  volumeMounts:
+    - name: secrets-store
+      mountPath: /mnt/secrets-store  # Path inside the container
+      readOnly: true
