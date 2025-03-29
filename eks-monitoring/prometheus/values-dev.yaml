@@ -59,7 +59,7 @@ grafana:
         name: grafana-secrets-role
         apiGroup: rbac.authorization.k8s.io
   
-  # Kubernetes secret mount settings
+  # Kubernetes secret mount settings.
   secrets:
     # If you're using Kubernetes Secrets, specify the secret to mount
     adminUser:
