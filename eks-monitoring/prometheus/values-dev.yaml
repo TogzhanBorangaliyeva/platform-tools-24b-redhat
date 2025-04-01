@@ -89,3 +89,15 @@ grafana:
   #   - name: secrets-store
   #     mountPath: /mnt/secrets-store  # Path inside the container
   #     readOnly: true
+
+    # # To make Grafana persistent (Using Statefulset)
+  # #
+  # persistence:
+  #   enabled: true
+  #   type: sts
+  #   storageClassName: "storageClassName"
+  #   accessModes:
+  #     - ReadWriteOnce
+  #   size: 20Gi
+  #   finalizers:
+  #     - kubernetes.io/pvc-protection
