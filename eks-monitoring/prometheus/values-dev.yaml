@@ -34,40 +34,55 @@ grafana:
     annotations:
       kubernetes.io/ingress.class: nginx
       # kubernetes.io/tls-acme: "true"  # Enable TLS if you're using ACM certificates.
-  serviceAccount:
-    create: false  # Set this to false because you already created it manually
-    name: grafana-service-account  # The service account you created
+      
+  # serviceAccount:
+  #   create: false  # Set this to false because you already created it manually
+  #   name: grafana-service-account  # The service account you created
 
-  rbac:
-    create: true  # If you want Helm to create the role and role binding automatically
-    # You can customize the Role and RoleBinding names if needed
-    role:
-      apiGroups:
-        - ""
-      resources:
-        - "secrets"
-      verbs:
-        - "get"
-        - "list"
-    roleBinding:
-      subjects:
-        - kind: ServiceAccount
-          name: grafana-service-account
-          namespace: monitoring
-      roleRef:
-        kind: Role
-        name: grafana-secrets-role
-        apiGroup: rbac.authorization.k8s.io
+  extraContainers:
+    - name: aws-secrets-init
+      image: amazon/aws-cli:latest
+      command: ["/bin/sh", "-c"]
+      args:
+        - "/etc/grafana-secrets/fetch-secrets.sh"
+      volumeMounts:
+        - name: grafana-secrets-script
+          mountPath: /etc/grafana-secrets
+  extraVolumes:
+    - name: grafana-secrets-script
+      configMap:
+        name: grafana-init-script
+
+  # rbac:
+  #   create: true  # If you want Helm to create the role and role binding automatically
+  #   # You can customize the Role and RoleBinding names if needed
+  #   role:
+  #     apiGroups:
+  #       - ""
+  #     resources:
+  #       - "secrets"
+  #     verbs:
+  #       - "get"
+  #       - "list"
+  #   roleBinding:
+  #     subjects:
+  #       - kind: ServiceAccount
+  #         name: grafana-service-account
+  #         namespace: monitoring
+  #     roleRef:
+  #       kind: Role
+  #       name: grafana-secrets-role
+  #       apiGroup: rbac.authorization.k8s.io
   
-  # Kubernetes secret mount settings.
-  secrets:
-    # If you're using Kubernetes Secrets, specify the secret to mount
-    adminUser:
-      secretName: grafana-secrets
-      secretKey: adminUser
-    adminPassword:
-      secretName: grafana-secrets
-      secretKey: adminPassword
+  # # Kubernetes secret mount settings.
+  # secrets:
+  #   # If you're using Kubernetes Secrets, specify the secret to mount
+  #   adminUser:
+  #     secretName: grafana-secrets
+  #     secretKey: adminUser
+  #   adminPassword:
+  #     secretName: grafana-secrets
+  #     secretKey: adminPassword
 
 
   # # SecretProviderClass Configuration (Used to integrate Secrets Manager secrets)
