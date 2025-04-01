@@ -35,32 +35,24 @@ grafana:
       kubernetes.io/ingress.class: nginx
       # kubernetes.io/tls-acme: "true"  # Enable TLS if you're using ACM certificates.
 
+  admin:
+    existingSecret: grafana-secrets  # This tells Helm to use the Kubernetes Secret
+    userKey: admin-user              # Key in the secret for the username
+    passwordKey: admin-password      # Key in the secret for the password
 
-  # admin:
-  #   existingSecret: grafana-secrets  # This tells Helm to use the Kubernetes Secret
-  #   userKey: admin-user              # Key in the secret for the username
-  #   passwordKey: admin-password      # Key in the secret for the password
+  extraEnv:
+    - name: GF_SECURITY_ADMIN_USER
+      valueFrom:
+        secretKeyRef:
+          name: grafana-secrets
+          key: admin-user
+    - name: GF_SECURITY_ADMIN_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: grafana-secrets
+          key: admin-password
 
-  # extraEnv:
-  #   - name: GF_SECURITY_ADMIN_USER
-  #     valueFrom:
-  #       secretKeyRef:
-  #         name: grafana-secrets
-  #         key: admin-user
-  #   - name: GF_SECURITY_ADMIN_PASSWORD
-  #     valueFrom:
-  #       secretKeyRef:
-  #         name: grafana-secrets
-  #         key: admin-password
-
-  serviceAccount:
-    create: false
-    name: grafana  # Uses IAM Role to fetch secret
-  adminPassword: ""
-  envFromSecrets:
-    - name: grafana-secret
-      key: admin-password
-
+ 
 
     # # To make Grafana persistent (Using Statefulset)
   # #
