@@ -34,7 +34,7 @@ grafana:
     annotations:
       kubernetes.io/ingress.class: nginx
       # kubernetes.io/tls-acme: "true"  # Enable TLS if you're using ACM certificates.
-      
+
   # serviceAccount:
   #   create: false  # Set this to false because you already created it manually
   #   name: grafana-service-account  # The service account you created
@@ -116,3 +116,6 @@ grafana:
   #   size: 20Gi
   #   finalizers:
   #     - kubernetes.io/pvc-protection
+
+
+
