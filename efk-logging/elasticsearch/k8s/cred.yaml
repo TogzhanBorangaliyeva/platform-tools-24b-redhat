@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: elastic-credential
+  namespace: efk
+type: Opaque
+data:
+  elastic-username: bXlVc2VybmFtZQ==  # base64 encoded value for 'myUsername'
+  elastic-password: bXlQYXNzd29yZA==  # base64 encoded value for 'myPassword'
