@@ -35,23 +35,41 @@ grafana:
       kubernetes.io/ingress.class: nginx
       # kubernetes.io/tls-acme: "true"  # Enable TLS if you're using ACM certificates.
 
+
+  admin:
+    existingSecret: grafana-secrets  # This tells Helm to use the Kubernetes Secret
+    userKey: admin-user              # Key in the secret for the username
+    passwordKey: admin-password      # Key in the secret for the password
+
+  extraEnv:
+    - name: GF_SECURITY_ADMIN_USER
+      valueFrom:
+        secretKeyRef:
+          name: grafana-secrets
+          key: admin-user
+    - name: GF_SECURITY_ADMIN_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: grafana-secrets
+          key: admin-password
+
   # serviceAccount:
   #   create: false  # Set this to false because you already created it manually
   #   name: grafana-service-account  # The service account you created
 
-  extraContainers:
-    - name: aws-secrets-init
-      image: amazon/aws-cli:latest
-      command: ["/bin/sh", "-c"]
-      args:
-        - "/etc/grafana-secrets/fetch-secrets.sh"
-      volumeMounts:
-        - name: grafana-secrets-script
-          mountPath: /etc/grafana-secrets
-  extraVolumes:
-    - name: grafana-secrets-script
-      configMap:
-        name: grafana-init-script
+  # extraContainers:
+  #   - name: aws-secrets-init
+  #     image: amazon/aws-cli:latest
+  #     command: ["/bin/sh", "-c"]
+  #     args:
+  #       - "/etc/grafana-secrets/fetch-secrets.sh"
+  #     volumeMounts:
+  #       - name: grafana-secrets-script
+  #         mountPath: /etc/grafana-secrets
+  # extraVolumes:
+  #   - name: grafana-secrets-script
+  #     configMap:
+  #       name: grafana-init-script
 
   # rbac:
   #   create: true  # If you want Helm to create the role and role binding automatically
