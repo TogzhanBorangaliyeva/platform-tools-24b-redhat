@@ -1,0 +1,8 @@
+---
+postgresqlDatabase: test
+metrics: # Enable metrics to deploy prometheus exporter as a sidecar
+  enabled: true
+  serviceMonitor: 
+    enabled: false # We can set it to true. Fakse is given to see how to deploy manually
+    additionalLabels:
+      prometheus: devops

@@ -27,13 +27,13 @@ grafana:
     ingressClassName: nginx
     hosts:
       - grafana.togzhanborangali.click
-    # tls:
-    #   - secretName: grafana-tls-secret
-    #     hosts:
-    #       - grafana.togzhanborangali.click
+    tls:
+      - secretName: grafana-tls-secret
+        hosts:
+          - grafana.togzhanborangali.click
     annotations:
       kubernetes.io/ingress.class: nginx
-      # kubernetes.io/tls-acme: "true"  # Enable TLS if you're using ACM certificates.
+      cert-manager.io/issuer: letsencrypt-prod  # Use the issuer to request a certificate
 
   admin:
     existingSecret: grafana-secrets  # This tells Helm to use the Kubernetes Secret
