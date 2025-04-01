@@ -57,12 +57,9 @@ grafana:
     create: false
     name: grafana  # Uses IAM Role to fetch secret
   adminPassword: ""
-  env:
-    - name: GF_SECURITY_ADMIN_PASSWORD
-      valueFrom:
-        secretKeyRef:
-          name: grafana-secret
-          key: admin-password
+  envFromSecrets:
+    - name: grafana-secret
+      key: admin-password
 
 
     # # To make Grafana persistent (Using Statefulset)
