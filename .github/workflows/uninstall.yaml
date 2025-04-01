@@ -55,7 +55,3 @@ jobs:
           echo "Waiting for resources to be deleted..."
           sleep 10
           kubectl get pods -n monitoring
-
-      - name: Cleanup Namespace (Optional)
-        run: |
-          kubectl delete namespace monitoring || true
