@@ -4,12 +4,12 @@ ingress:
   enabled: true
   annotations: 
     kubernetes.io/ingress.class: nginx
-  className: "nginx"
+  className: nginx
   hosts:
     - host: elasticsearch.togzhanborangali.click
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
+      # paths:
+      #   - path: /
+      #     pathType: ImplementationSpecific
   tls: []
   # Uncomment and configure for TLS if needed
   # tls:
