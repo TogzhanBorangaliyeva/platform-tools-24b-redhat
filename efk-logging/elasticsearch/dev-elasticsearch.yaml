@@ -12,7 +12,7 @@ ingress:
           pathType: Prefix
           backend:
             service:
-              name: elasticsearch
+              name: elasticsearch-master
               port:
                 number: 9200
   tls: []
