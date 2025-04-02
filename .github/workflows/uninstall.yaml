@@ -51,7 +51,4 @@ jobs:
 
       - name: Uninstall Helm Release
         run: |
-          helm uninstall prometheus -n monitoring
-          echo "Waiting for resources to be deleted..."
-          sleep 10
-          kubectl get pods -n monitoring
+          helm uninstall elasticsearch -n efk
