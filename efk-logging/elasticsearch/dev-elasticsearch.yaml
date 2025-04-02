@@ -27,12 +27,12 @@ ingress:
 #     enabled: true
 #   annotations: {}
 
-# volumeClaimTemplate:
-#   storageClassName: ebs-sc
-#   accessModes: ["ReadWriteOnce"]
-#   resources:
-#     requests:
-#       storage: 30Gi
+volumeClaimTemplate:
+  storageClassName: ebs-sc
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 30Gi
 
 protocol: http
 httpPort: 9200
