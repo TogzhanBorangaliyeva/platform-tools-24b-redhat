@@ -10,12 +10,12 @@ ingress:
     - host: elasticsearch.togzhanborangali.click
       paths:
         - path: /
-          # pathType: Prefix
-          # backend:
-          #   service:
-          #     name: elasticsearch-master
-          #     port:
-          #       number: 9200
+          pathType: Prefix
+          backend:
+            service:
+              name: elasticsearch-master
+              port:
+                number: 9200
   # tls:
   #   - secretName: elasticsearch-tls
   #     hosts:
