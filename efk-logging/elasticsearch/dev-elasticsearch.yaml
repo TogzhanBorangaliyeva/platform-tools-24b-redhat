@@ -5,11 +5,11 @@ ingress:
   annotations: 
     kubernetes.io/ingress.class: nginx
   className: nginx
+  pathType: ImplementationSpecific
   hosts:
     - host: elasticsearch.togzhanborangali.click
-      # paths:
-      #   - path: /
-      #     pathType: ImplementationSpecific
+      paths:
+        - path: /
   tls: []
   # Uncomment and configure for TLS if needed
   # tls:
