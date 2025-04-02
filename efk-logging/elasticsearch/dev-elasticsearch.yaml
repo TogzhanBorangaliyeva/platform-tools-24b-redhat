@@ -21,11 +21,11 @@ ingress:
   #     hosts:
   #       - elasticsearch.togzhanborangali.click
 
-# persistence:
-#   enabled: true
-#   labels:
-#     enabled: true
-#   annotations: {}
+persistence:
+  enabled: true
+  labels:
+    enabled: true
+  annotations: {}
 
 volumeClaimTemplate:
   storageClassName: ebs-sc
@@ -45,17 +45,17 @@ envFrom:
 secret:
   enabled: false
 
-# service:
-#   enabled: true
-#   type: ClusterIP
-#   selector:
-#     app: elasticsearch-master  # Ensure this label matches Elasticsearch pods
-#   ports:
-#     - name: http
-#       port: 9200
-#       targetPort: 9200
-#       protocol: TCP
-#     - name: transport
-#       port: 9300
-#       targetPort: 9300
-#       protocol: TCP
+service:
+  enabled: true
+  type: ClusterIP
+  selector:
+    app: elasticsearch-master  # Ensure this label matches Elasticsearch pods
+  ports:
+    - name: http
+      port: 9200
+      targetPort: 9200
+      protocol: TCP
+    - name: transport
+      port: 9300
+      targetPort: 9300
+      protocol: TCP
