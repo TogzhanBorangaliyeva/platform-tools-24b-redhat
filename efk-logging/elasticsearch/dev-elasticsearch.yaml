@@ -43,7 +43,7 @@ service:
   enabled: true
   type: ClusterIP
   selector:
-    app: elasticsearch  # Ensure this label matches Elasticsearch pods
+    app: elasticsearch-master  # Ensure this label matches Elasticsearch pods
   ports:
     - name: http
       port: 9200
